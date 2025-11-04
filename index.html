@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+		<title>Chromind ツールキット</title>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="css/index.css"
+		/>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="header__text">
+				<h1>Chromind</h1>
+				<p>配色提案・捕食計算シミュレーション・ランダム配色生成を 1 つの画面で。</p>
+			</div>
+			<nav
+				class="quick-links"
+				aria-label="機能へのショートカット"
+			>
+				<a href="#palette-designer">配色提案</a>
+				<a href="#predator-prey">捕食計算</a>
+				<a href="#random-palette">ランダム配色</a>
+			</nav>
+		</header>
+
+		<main class="layout">
+			<section
+				id="palette-designer"
+				class="card"
+			>
+				<div class="card__header">
+					<h2>配色提案</h2>
+					<p>ベースカラーから補色ペアと、選択した色数でのアクセント提案を自動生成します。</p>
+				</div>
+				<form
+					class="form"
+					id="palette-form"
+				>
+					<label
+						for="base-color"
+						class="form__label"
+						>ベースカラー</label
+					>
+					<div class="form__color-input">
+						<input
+							type="color"
+							id="base-color"
+							name="base-color"
+							value="#2c3e50"
+							aria-label="ベースカラー"
+						/>
+						<input
+							type="text"
+							id="base-color-text"
+							value="#2c3e50"
+							maxlength="7"
+							aria-label="ベースカラーの 16 進表記"
+						/>
+					</div>
+					<label
+						for="palette-count"
+						class="form__label"
+						>色数</label
+					>
+					<input
+						type="range"
+						id="palette-count"
+						name="paletteCount"
+						min="2"
+						max="7"
+						value="4"
+					/>
+					<div class="range-value"><span id="palette-count-value">4</span> 色</div>
+					<button
+						type="submit"
+						class="button"
+					>
+						配色を生成
+					</button>
+				</form>
+				<div
+					class="palette-results"
+					id="palette-results"
+					aria-live="polite"
+				></div>
+			</section>
+
+			<section
+				id="predator-prey"
+				class="card"
+			>
+				<div class="card__header">
+					<h2>捕食計算シミュレーション</h2>
+					<p>ロトカ・ヴォルテラ方程式を用いて捕食・被捕食モデルを予測します。</p>
+				</div>
+				<form
+					class="form grid"
+					id="simulation-form"
+				>
+					<div class="form-group">
+						<label for="alpha">被捕食者増加率 α</label>
+						<input
+							type="number"
+							id="alpha"
+							name="alpha"
+							value="0.5"
+							step="0.01"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="beta">捕食効率 β</label>
+						<input
+							type="number"
+							id="beta"
+							name="beta"
+							value="0.02"
+							step="0.001"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="gamma">捕食者死亡率 γ</label>
+						<input
+							type="number"
+							id="gamma"
+							name="gamma"
+							value="0.4"
+							step="0.01"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="delta">捕食者成長率 δ</label>
+						<input
+							type="number"
+							id="delta"
+							name="delta"
+							value="0.01"
+							step="0.001"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="prey-initial">被捕食者初期値</label>
+						<input
+							type="number"
+							id="prey-initial"
+							name="preyInitial"
+							value="40"
+							step="1"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="predator-initial">捕食者初期値</label>
+						<input
+							type="number"
+							id="predator-initial"
+							name="predatorInitial"
+							value="9"
+							step="1"
+							min="0"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="steps">ステップ数</label>
+						<input
+							type="number"
+							id="steps"
+							name="steps"
+							value="200"
+							step="10"
+							min="10"
+							required
+						/>
+					</div>
+					<div class="form-group">
+						<label for="dt">時間刻み (dt)</label>
+						<input
+							type="number"
+							id="dt"
+							name="dt"
+							value="0.1"
+							step="0.01"
+							min="0.01"
+							required
+						/>
+					</div>
+					<button
+						type="submit"
+						class="button button--primary"
+					>
+						シミュレーション実行
+					</button>
+				</form>
+				<div
+					class="simulation-output"
+					id="simulation-output"
+				>
+					<canvas
+						id="simulation-chart"
+						width="600"
+						height="320"
+						role="img"
+						aria-label="捕食・被捕食シミュレーション結果"
+					></canvas>
+					<div class="table-wrapper">
+						<table
+							id="simulation-table"
+							aria-live="polite"
+						>
+							<thead>
+								<tr>
+									<th scope="col">ステップ</th>
+									<th scope="col">被捕食者</th>
+									<th scope="col">捕食者</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+
+			<section
+				id="random-palette"
+				class="card"
+			>
+				<div class="card__header">
+					<h2>ランダム配色生成</h2>
+					<p>指定した色数でランダムなカラーパレットを作成します。</p>
+				</div>
+				<form
+					class="form"
+					id="random-form"
+				>
+					<label
+						for="palette-size"
+						class="form__label"
+						>色数</label
+					>
+					<input
+						type="range"
+						id="palette-size"
+						name="paletteSize"
+						min="3"
+						max="10"
+						value="5"
+					/>
+					<div class="range-value"><span id="palette-size-value">5</span> 色</div>
+					<label
+						for="seed"
+						class="form__label"
+						>シード (任意)</label
+					>
+					<input
+						type="number"
+						id="seed"
+						name="seed"
+						placeholder="例: 2025"
+					/>
+					<button
+						type="submit"
+						class="button"
+					>
+						ランダム生成
+					</button>
+				</form>
+				<div
+					class="palette-results"
+					id="random-results"
+					aria-live="polite"
+				></div>
+			</section>
+		</main>
+
+		<footer class="site-footer">
+			<p>© 2025 Chromind ZAKIO</p>
+		</footer>
+
+		<script
+			src="js/app.js"
+			defer
+		></script>
+	</body>
+</html>
